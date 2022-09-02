@@ -42,9 +42,14 @@ const App = () => {
 
       personService.create(newPersons).then(() => {
         personService.getAll().then(res => setPersons(res.data))
+        setMessage(null)
+        setSuccessfulMessage(`Added ${name}`)
+      }).catch(error => {
+        // this is the way to access the error message
+        console.log(error.response.data.error)
+        setSuccessfulMessage(null)
+        setMessage(error.response.data.error)
       })
-
-      setSuccessfulMessage(`Added ${name}`)
 
     }else{
       const confirm = window.confirm(`${e.target.name.value} is already added to phonebook, replace the old number with a new one?`)
@@ -55,6 +60,7 @@ const App = () => {
         }).then(() => personService.getAll().then(res => setPersons(res.data)))
         .catch(error => {
           console.log(error)
+          setSuccessfulMessage(null)
           setMessage(`Information of ${name} has already been removed from server`)
         })
       }
